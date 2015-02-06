@@ -137,24 +137,23 @@ namespace ChromeUnlocker
                 if (dir.GetFiles("chrome.dll").Length > 0)
                 {
                     targetDir = dir;
+                    
+                    foreach (var file in targetDir.GetFiles())
+                    {
+                        _log(String.Format("Check file {0}", file.Name));
+                        FileStream f = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+                        if (!rm_Policies(f))
+                        {
+                            _log("No hit!");
+                        }
+                        f.Close();
+                    }
                 }
             }
 
             if (targetDir == null)
             {
                 _err("Sorry, can't find a valid chrome.dll :<");
-                return;
-            }
-
-            foreach (var file in targetDir.GetFiles())
-            {
-                _log(String.Format("Check file {0}", file.Name));
-                FileStream f = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
-                if (!rm_Policies(f))
-                {
-                    _log("No hit!");
-                }
-                f.Close();
             }
         }
         
